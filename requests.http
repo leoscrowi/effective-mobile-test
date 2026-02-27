@@ -1,0 +1,90 @@
+### Create subscription
+POST http://localhost:8080/subscriptions
+Content-Type: application/json
+
+{
+  "service_name": "Yandex Plus",
+  "price": 400,
+  "user_id": "60601fee-2bf1-4721-ae6f-7636e79a0cba",
+  "start_date": "07-2025",
+  "end_date": "08-2025"
+}
+
+###
+### Create subscription without end_date
+POST http://localhost:8080/subscriptions
+Content-Type: application/json
+
+{
+  "service_name": "Yandex Plus",
+  "price": 400,
+  "user_id": "60601fee-2bf1-4721-ae6f-7636e79a0cba",
+  "start_date": "07-2025"
+}
+
+###
+### Get subscription by ID
+GET http://localhost:8080/subscriptions/2d662e56-8b03-4a11-899c-29b099996839
+
+###
+### Edit subscription
+PATCH http://localhost:8080/subscriptions/2d662e56-8b03-4a11-899c-29b099996839
+Content-Type: application/json
+
+{
+  "service_name": "Yandex Plus Updated",
+  "price": 500,
+  "user_id": "60601fee-2bf1-4721-ae6f-7636e79a0cba",
+  "start_date": "07-2025",
+  "end_date": "09-2025"
+}
+
+###
+### Get all subscriptions
+GET http://localhost:8080/subscriptions
+
+###
+### Delete subscription
+DELETE http://localhost:8080/subscriptions/c3cce279-72ff-45af-858e-ae8422377c0d
+
+###
+### Get subscriptions amount (all subscriptions)
+GET http://localhost:8080/subscriptions/amount
+Content-Type: application/json
+
+{
+  "user_id": "00000000-0000-0000-0000-000000000000",
+  "service_name": ""
+}
+
+###
+### Get subscriptions amount (filtered by user_id)
+GET http://localhost:8080/subscriptions/amount
+Content-Type: application/json
+
+{
+  "user_id": "60601fee-2bf1-4721-ae6f-7636e79a0cba",
+  "service_name": ""
+}
+
+###
+### Get subscriptions amount (filtered by service_name)
+GET http://localhost:8080/subscriptions/amount
+Content-Type: application/json
+
+{
+  "user_id": "00000000-0000-0000-0000-000000000000",
+  "service_name": "Yandex Plus"
+}
+
+###
+### Get subscriptions amount (filtered by user_id and service_name)
+GET http://localhost:8080/subscriptions/amount
+Content-Type: application/json
+
+{
+  "user_id": "60601fee-2bf1-4721-ae6f-7636e79a0cba",
+  "service_name": "Yandex Plus"
+}
+
+###

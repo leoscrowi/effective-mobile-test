@@ -42,13 +42,18 @@ func (s *SubscriptionUsecase) ReadSubscription(ctx context.Context, d dto.ReadSu
 		return dto.ReadSubscriptionResponse{}, fmt.Errorf("%s: %v;", op, err)
 	}
 
+	endDate := ""
+	if sub.EndDate != nil {
+		endDate = *sub.EndDate
+	}
+
 	return dto.ReadSubscriptionResponse{
 		ID:          sub.ID,
 		ServiceName: sub.ServiceName,
 		Price:       sub.Price,
 		UserID:      sub.UserID,
 		StartDate:   sub.StartDate,
-		EndDate:     sub.EndDate,
+		EndDate:     endDate,
 	}, nil
 }
 
@@ -60,7 +65,7 @@ func (s *SubscriptionUsecase) EditSubscription(ctx context.Context, d dto.EditSu
 		Price:       d.Price,
 		UserID:      d.UserID,
 		StartDate:   d.StartDate,
-		EndDate:     d.EndDate,
+		EndDate:     &d.EndDate,
 	})
 
 	if err != nil {
@@ -89,15 +94,29 @@ func (s *SubscriptionUsecase) ReadSubscriptionsList(ctx context.Context) (dto.Re
 
 	var subsResponse []dto.ReadSubscriptionResponse
 	for _, sub := range subs {
+		endDate := ""
+		if sub.EndDate != nil {
+			endDate = *sub.EndDate
+		}
 		subsResponse = append(subsResponse, dto.ReadSubscriptionResponse{
 			ID:          sub.ID,
 			ServiceName: sub.ServiceName,
 			Price:       sub.Price,
 			UserID:      sub.UserID,
 			StartDate:   sub.StartDate,
-			EndDate:     sub.EndDate,
+			EndDate:     endDate,
 		})
 	}
 
 	return dto.ReadSubscriptionsListResponse{Subscriptions: subsResponse}, nil
+}
+
+func (s *SubscriptionUsecase) GetSubscriptionsAmount(ctx context.Context, request dto.GetSubscriptionsAmountRequest) (dto.GetSubscriptionsAmountResponse, error) {
+	op := `SubscriptionUsecase.GetSubscriptionsAmount`
+	result, err := s.repository.GetSubscriptionsAmount(ctx, request.UserID, request.ServiceName)
+	if err != nil {
+		return dto.GetSubscriptionsAmountResponse{}, fmt.Errorf("%s: %v;", op, err)
+	}
+
+	return dto.GetSubscriptionsAmountResponse{TotalAmount: result.Price}, nil
 }

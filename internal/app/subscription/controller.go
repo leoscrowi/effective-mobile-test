@@ -8,4 +8,5 @@ type Controller interface {
 	EditSubscription(w http.ResponseWriter, r *http.Request)
 	DeleteSubscription(w http.ResponseWriter, r *http.Request)
 	ReadSubscriptionsList(w http.ResponseWriter, r *http.Request)
+	GetSubscriptionsAmount(w http.ResponseWriter, r *http.Request)
 }

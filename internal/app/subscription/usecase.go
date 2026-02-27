@@ -12,4 +12,5 @@ type Usecase interface {
 	EditSubscription(ctx context.Context, dto dto.EditSubscriptionRequset) error
 	DeleteSubscription(ctx context.Context, dto dto.DeleteSubscriptionRequest) error
 	ReadSubscriptionsList(ctx context.Context) (dto.ReadSubscriptionsListResponse, error)
+	GetSubscriptionsAmount(ctx context.Context, request dto.GetSubscriptionsAmountRequest) (dto.GetSubscriptionsAmountResponse, error)
 }

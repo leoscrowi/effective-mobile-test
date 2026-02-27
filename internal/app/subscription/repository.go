@@ -12,4 +12,5 @@ type Repository interface {
 	EditSubscription(ctx context.Context, Subscription subscriptiondomain.Subscription) error
 	DeleteSubscription(ctx context.Context, uuid uuid.UUID) error
 	ReadSubscriptionsList(ctx context.Context) ([]subscriptiondomain.Subscription, error)
+	GetSubscriptionsAmount(ctx context.Context, userID uuid.UUID, serviceName string) (subscriptiondomain.Subscription, error)
 }

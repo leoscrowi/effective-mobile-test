@@ -1,0 +1,263 @@
+basePath: /
+definitions:
+  dto.CreateSubscriptionRequest:
+    description: Структура для создания новой подписки
+    properties:
+      end_date:
+        example: 08-2026
+        type: string
+      price:
+        example: 400
+        type: integer
+      service_name:
+        example: Yandex Music
+        type: string
+      start_date:
+        example: 07-2026
+        type: string
+      user_id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+  dto.CreateSubscriptionResponse:
+    properties:
+      id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+  dto.EditSubscriptionRequset:
+    properties:
+      end_date:
+        example: 08-2026
+        type: string
+      id:
+        type: string
+      price:
+        example: 400
+        type: integer
+      service_name:
+        example: Yandex Music
+        type: string
+      start_date:
+        example: 07-2026
+        type: string
+      user_id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+  dto.GetSubscriptionsAmountRequest:
+    properties:
+      service_name:
+        example: Yandex Music
+        type: string
+      user_id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+  dto.GetSubscriptionsAmountResponse:
+    properties:
+      total_amount:
+        example: 400
+        type: integer
+    type: object
+  dto.ReadSubscriptionResponse:
+    properties:
+      end_time:
+        example: 08-2026
+        type: string
+      id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+      price:
+        example: 400
+        type: integer
+      service_name:
+        example: Yandex Music
+        type: string
+      start_date:
+        example: 07-2026
+        type: string
+      user_id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+  dto.ReadSubscriptionsListResponse:
+    properties:
+      subscriptions:
+        items:
+          $ref: '#/definitions/dto.ReadSubscriptionResponse'
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API для управления подписками пользователей
+  title: Subscription Management API
+  version: "1.0"
+paths:
+  /subscriptions:
+    get:
+      description: Получает список всех подписок в системе
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ReadSubscriptionsListResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Получить список всех подписок
+      tags:
+      - subscriptions
+    post:
+      consumes:
+      - application/json
+      description: Создает новую подписку с указанными параметрами
+      parameters:
+      - description: Данные подписки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateSubscriptionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CreateSubscriptionResponse'
+        "400":
+          description: Ошибка валидации данных
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Создать новую подписку
+      tags:
+      - subscriptions
+  /subscriptions/{id}:
+    delete:
+      description: Удаляет подписку по её ID
+      parameters:
+      - description: ID подписки (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Отсутствует или неверный параметр id
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Удалить подписку
+      tags:
+      - subscriptions
+    get:
+      description: Получает информацию о подписке по её уникальному идентификатору
+      parameters:
+      - description: ID подписки (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ReadSubscriptionResponse'
+        "400":
+          description: Отсутствует или неверный параметр id
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Получить подписку по ID
+      tags:
+      - subscriptions
+    patch:
+      consumes:
+      - application/json
+      description: Обновляет информацию о подписке по её ID
+      parameters:
+      - description: ID подписки (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Данные для обновления подписки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EditSubscriptionRequset'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Ошибка валидации данных
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Обновить подписку
+      tags:
+      - subscriptions
+  /subscriptions/amount:
+    get:
+      consumes:
+      - application/json
+      description: Вычисляет сумму стоимости всех подписок с фильтрацией по user_id
+        и service_name
+      parameters:
+      - description: Фильтры для подсчета
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetSubscriptionsAmountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetSubscriptionsAmountResponse'
+        "400":
+          description: Ошибка при чтении JSON
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Получить суммарную стоимость подписок
+      tags:
+      - subscriptions
+schemes:
+- http
+- https
+swagger: "2.0"

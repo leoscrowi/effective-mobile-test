@@ -69,3 +69,26 @@ func (s *SubscriptionRepository) ReadSubscriptionsList(ctx context.Context) ([]s
 
 	return subs, nil
 }
+
+func (s *SubscriptionRepository) GetSubscriptionsAmount(ctx context.Context, userID uuid.UUID, serviceName string) (subscriptiondomain.Subscription, error) {
+	op := `SubscriptionRepository.GetSubscriptionsAmount`
+	var totalPrice int64
+
+	query := s.db.WithContext(ctx).Table("subscriptions")
+
+	if userID != uuid.Nil {
+		query = query.Where("user_id = ?", userID)
+	}
+
+	if serviceName != "" {
+		query = query.Where("service_name = ?", serviceName)
+	}
+
+	err := query.Select("COALESCE(SUM(price), 0) as total").Scan(&totalPrice).Error
+
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return subscriptiondomain.Subscription{}, fmt.Errorf("%s: %v", op, err)
+	}
+
+	return subscriptiondomain.Subscription{Price: totalPrice}, nil
+}

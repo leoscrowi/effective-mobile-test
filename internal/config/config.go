@@ -2,17 +2,22 @@ package config
 
 import "os"
 
+type AppConfig struct {
+	Port string `default:"8080"`
+}
+
 type Config struct {
 	DatabaseConfig DatabaseConfig
+	AppConfig      AppConfig
 }
 
 type DatabaseConfig struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Name     string
-	SslMode  string
+	Host     string `default:"localhost"`
+	Port     string `default:"5432"`
+	User     string `default:"postgres"`
+	Password string `default:"postgres"`
+	Name     string `default:"subscription_db"`
+	SslMode  string `default:"disable"`
 }
 
 func MustLoad() *Config {
@@ -24,6 +29,9 @@ func MustLoad() *Config {
 			Password: os.Getenv("POSTGRES_PASSWORD"),
 			Name:     os.Getenv("POSTGRES_DB"),
 			SslMode:  os.Getenv("POSTGRES_SSL_MODE"),
+		},
+		AppConfig: AppConfig{
+			Port: os.Getenv("APP_PORT"),
 		},
 	}
 }

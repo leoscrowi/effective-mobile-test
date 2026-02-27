@@ -2,15 +2,13 @@ package subscription
 
 import (
 	"github.com/google/uuid"
-	"github.com/govalues/decimal"
-	"time"
 )
 
 type Subscription struct {
-	ID          uuid.UUID `gorm:"type:uuid;primary_key;"`
+	ID          uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
 	ServiceName string
-	Price       decimal.Decimal `gorm:"type:decimal(10,2);"`
+	Price       int64
 	UserID      uuid.UUID
-	StartDate   time.Time
-	EndDate     time.Time
+	StartDate   string
+	EndDate     *string
 }
